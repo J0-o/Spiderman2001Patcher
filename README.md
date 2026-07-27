@@ -70,13 +70,13 @@ Copy the contents of `dist` beside `SpideyPC.exe`, put all `.kpatch` files in
 the adjacent `patches` directory, and run:
 
 ```powershell
-.\SpiderManPatcher.exe
+.\SpideyLauncher.exe
 ```
 
 Paths can also be supplied explicitly:
 
 ```powershell
-.\SpiderManPatcher.exe "C:\Games\Spider-Man\SpideyPC.exe" "C:\Mods\Spider-Man\Patches"
+.\SpideyLauncher.exe "C:\Games\Spider-Man\SpideyPC.exe" "C:\Mods\Spider-Man\Patches"
 ```
 
 The patch directory is authoritative. On each run the launcher restores its

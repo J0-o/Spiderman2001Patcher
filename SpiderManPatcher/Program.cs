@@ -136,7 +136,7 @@ internal static class Program
 
     private static void PrintUsage()
     {
-        Console.WriteLine("SpiderManPatcher [game-executable] [patches-directory]");
+        Console.WriteLine("SpideyLauncher [game-executable] [patches-directory]");
         Console.WriteLine();
         Console.WriteLine("Defaults:");
         Console.WriteLine($"  game-executable:   .\\{GameExecutableName}");
