@@ -1,0 +1,38 @@
+[metadata]
+target_versions = [
+    "0A11A49F3F63D4BB15650F322D654553FC47234B01885B852A058FF074689DEA",
+    "D55A0BB0E920C497CE1CA76F08ED2E62FEEFCB6FF3C2901C0D59890F099BA93C"
+]
+
+# Forward both branches of the game's authored fog-parameter update to the
+# legacy render-state bridge.
+[[hooks]]
+address = 0x004533AA
+type = "detour"
+function = "FogParamsHook"
+original_bytes = [0xE8, 0x01, 0x2A, 0x0B, 0x00]
+skip_original_bytes = true
+
+[[hooks]]
+address = 0x004533EE
+type = "detour"
+function = "FogParamsHook"
+original_bytes = [0xE8, 0xBD, 0x29, 0x0B, 0x00]
+skip_original_bytes = true
+
+# Update renderer fog during scripted start/end transitions.
+[[hooks]]
+address = 0x00472EC7
+type = "detour"
+function = "FogParamsHook"
+original_bytes = [0xE8, 0xE4, 0x2E, 0x09, 0x00]
+skip_original_bytes = true
+
+# Reassert fog after the game initializes the level scene, because the stock
+# PC renderer explicitly disables D3D fog during device setup.
+[[hooks]]
+address = 0x004559E9
+type = "detour"
+function = "FogBeginSceneHook"
+original_bytes = [0xE8, 0x12, 0x04, 0x0B, 0x00]
+skip_original_bytes = true

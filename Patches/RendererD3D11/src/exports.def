@@ -1,0 +1,17 @@
+LIBRARY "windows_x86"
+EXPORTS
+    SpideyDirectDrawCreateEx
+    SpideyDirectDrawEnumerateExA
+    SpideyDrawCount DATA
+    SpideyPresentStarted DATA
+    SpideyPresentCompleted DATA
+    SpideySwapChainPresentCount DATA
+    SpideyLastPresentResult DATA
+    SpideyDeviceRemovedReason DATA
+    SpideyLastFrameHash DATA
+    SpideyLastPresentMicroseconds DATA
+    SpideyMaxPresentMicroseconds DATA
+    SpideyMsaaSamples DATA
+    SpideyAnisotropicFiltering DATA
+    SpideyVSync DATA
+    SpideyFpsLimit DATA

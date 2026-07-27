@@ -1,0 +1,42 @@
+[metadata]
+target_versions = [
+    "0A11A49F3F63D4BB15650F322D654553FC47234B01885B852A058FF074689DEA",
+    "D55A0BB0E920C497CE1CA76F08ED2E62FEEFCB6FF3C2901C0D59890F099BA93C"
+]
+
+# Replace the one startup call to the original binary configuration loader.
+[[hooks]]
+address = 0x005159D5
+type = "detour"
+function = "LoadTextConfig"
+original_bytes = [0xE8, 0xA6, 0xFC, 0xFF, 0xFF]
+skip_original_bytes = true
+
+# Replace every call to the original binary configuration saver.
+[[hooks]]
+address = 0x0051566B
+type = "detour"
+function = "SaveTextConfig"
+original_bytes = [0xE8, 0xE0, 0x01, 0x00, 0x00]
+skip_original_bytes = true
+
+[[hooks]]
+address = 0x00497F46
+type = "detour"
+function = "SaveTextConfig"
+original_bytes = [0xE8, 0x05, 0xD9, 0x07, 0x00]
+skip_original_bytes = true
+
+[[hooks]]
+address = 0x0050D0D0
+type = "detour"
+function = "SaveTextConfig"
+original_bytes = [0xE8, 0x7B, 0x87, 0x00, 0x00]
+skip_original_bytes = true
+
+[[hooks]]
+address = 0x0050DF5C
+type = "detour"
+function = "SaveTextConfig"
+original_bytes = [0xE8, 0xEF, 0x78, 0x00, 0x00]
+skip_original_bytes = true

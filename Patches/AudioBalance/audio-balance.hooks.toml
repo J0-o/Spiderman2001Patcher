@@ -1,0 +1,54 @@
+[metadata]
+target_versions = [
+    "0A11A49F3F63D4BB15650F322D654553FC47234B01885B852A058FF074689DEA",
+    "D55A0BB0E920C497CE1CA76F08ED2E62FEEFCB6FF3C2901C0D59890F099BA93C"
+]
+
+# Preserve the authored per-sound modifier during positional and explicit
+# voice-volume updates.
+[[hooks]]
+address = 0x00472094
+type = "detour"
+function = "ModifySfxVolumeHook"
+original_bytes = [0xE8, 0xA7, 0xFC, 0xFF, 0xFF]
+skip_original_bytes = true
+
+[[hooks]]
+address = 0x0047218A
+type = "detour"
+function = "ModifySfxVolumeHook"
+original_bytes = [0xE8, 0xB1, 0xFB, 0xFF, 0xFF]
+skip_original_bytes = true
+
+# Pause recovery already uses the authored modifier, but also applies the
+# global master volume a second time. Recalculate from the stored voice level
+# so recovery matches playback and live updates.
+[[hooks]]
+address = 0x004722D9
+type = "detour"
+function = "StoredSfxVolumeHook"
+original_bytes = [0xE8, 0x12, 0x20, 0x09, 0x00]
+skip_original_bytes = true
+
+# The original initial-playback path stores the authored modifier but passes
+# an unmodified volume to DirectSound in each of its three playback branches.
+[[hooks]]
+address = 0x00472817
+type = "detour"
+function = "StoredSfxVolumeHook"
+original_bytes = [0xE8, 0xD4, 0x1A, 0x09, 0x00]
+skip_original_bytes = true
+
+[[hooks]]
+address = 0x0047283B
+type = "detour"
+function = "StoredSfxVolumeHook"
+original_bytes = [0xE8, 0xB0, 0x1A, 0x09, 0x00]
+skip_original_bytes = true
+
+[[hooks]]
+address = 0x00472856
+type = "detour"
+function = "StoredSfxVolumeHook"
+original_bytes = [0xE8, 0x95, 0x1A, 0x09, 0x00]
+skip_original_bytes = true

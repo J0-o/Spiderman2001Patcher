@@ -1,0 +1,15 @@
+LIBRARY "windows_x86"
+EXPORTS
+    FrameUpdateHook
+    AudioUpdateHook
+    RenderHook
+    CameraUpdateHook
+    SpideyInterpolatedRenderCount DATA
+    SpideySimulationCallCount DATA
+    SpideyLastInterpolatedObjectCount DATA
+    SpideyLastInterpolatedSkeletonCount DATA
+    SpideySimulationRate DATA
+    Spidey20HzReason DATA
+    SpideyObjectInterpolationRate DATA
+    SpideyAnimationInterpolationRate DATA
+    SpideyCameraInterpolationRate DATA

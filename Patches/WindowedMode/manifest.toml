@@ -1,0 +1,13 @@
+[patch]
+id = "windowed-mode"
+name = "Configurable Fullscreen / Windowed Mode"
+version = "2.0.0"
+author = "Spider-Man Patch Project"
+description = "Uses Fullscreen in the plain-text Spidey.cfg to select Spider-Man's original fullscreen or bordered-window path."
+
+requires = ["renderer-d3d11", "text-config"]
+conflicts = []
+
+[patch.supported_versions]
+spider_man_retail = "0A11A49F3F63D4BB15650F322D654553FC47234B01885B852A058FF074689DEA"
+spider_man_no_cd = "D55A0BB0E920C497CE1CA76F08ED2E62FEEFCB6FF3C2901C0D59890F099BA93C"

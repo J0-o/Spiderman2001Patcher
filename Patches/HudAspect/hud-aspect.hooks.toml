@@ -1,0 +1,35 @@
+[metadata]
+target_versions = [
+    "0A11A49F3F63D4BB15650F322D654553FC47234B01885B852A058FF074689DEA",
+    "D55A0BB0E920C497CE1CA76F08ED2E62FEEFCB6FF3C2901C0D59890F099BA93C"
+]
+
+# Scope aspect correction to the gameplay panel.
+[[hooks]]
+address = 0x0045561A
+type = "detour"
+function = "HudDisplayHook"
+original_bytes = [0xE8, 0xA1, 0x02, 0x01, 0x00]
+skip_original_bytes = true
+
+# Correct the four submitted X coordinates while the gameplay panel is active,
+# then execute the original function prologue and continue normally.
+[[hooks]]
+address = 0x00507910
+type = "detour"
+function = "HudQuadHook"
+original_bytes = [
+    0xD9, 0x44, 0x24, 0x54,
+    0xA1, 0x78, 0x81, 0x56, 0x00
+]
+
+# Flat-shaded HUD bars use a separate rectangle submitter. Correct its X
+# position and width while preserving its vertical geometry.
+[[hooks]]
+address = 0x00507470
+type = "detour"
+function = "HudRectangleHook"
+original_bytes = [
+    0xD9, 0x44, 0x24, 0x28,
+    0xA1, 0x78, 0x81, 0x56, 0x00
+]

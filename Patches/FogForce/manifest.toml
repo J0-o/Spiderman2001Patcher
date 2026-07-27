@@ -1,0 +1,13 @@
+[patch]
+id = "fog-restored"
+name = "Restored Authored Fog"
+version = "1.0.0"
+author = "Spider-Man Patch Project"
+description = "Forces the dormant PC fog state on and forwards the game's authored linear fog parameters to the D3D11 renderer."
+
+requires = ["renderer-d3d11"]
+conflicts = []
+
+[patch.supported_versions]
+spider_man_retail = "0A11A49F3F63D4BB15650F322D654553FC47234B01885B852A058FF074689DEA"
+spider_man_no_cd = "D55A0BB0E920C497CE1CA76F08ED2E62FEEFCB6FF3C2901C0D59890F099BA93C"

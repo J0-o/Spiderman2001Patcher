@@ -1,0 +1,15 @@
+[metadata]
+target_versions = [
+    "0A11A49F3F63D4BB15650F322D654553FC47234B01885B852A058FF074689DEA",
+    "D55A0BB0E920C497CE1CA76F08ED2E62FEEFCB6FF3C2901C0D59890F099BA93C"
+]
+
+# Replace the gameplay render-setup call with a wrapper that widens TanHalf by
+# current_aspect / (4:3) and inversely scales the horizontal projection factor,
+# preserving their product and therefore the original vertical field of view.
+[[hooks]]
+address = 0x00455633
+type = "detour"
+function = "CameraAspectHook"
+original_bytes = [0xE8, 0x88, 0xD7, 0x01, 0x00]
+skip_original_bytes = true

@@ -1,0 +1,4 @@
+LIBRARY "windows_x86"
+EXPORTS
+    FogParamsHook
+    FogBeginSceneHook

@@ -1,0 +1,5 @@
+LIBRARY "windows_x86"
+EXPORTS
+    HudDisplayHook
+    HudQuadHook
+    HudRectangleHook

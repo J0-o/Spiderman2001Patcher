@@ -1,0 +1,30 @@
+[metadata]
+target_versions = [
+    "D55A0BB0E920C497CE1CA76F08ED2E62FEEFCB6FF3C2901C0D59890F099BA93C"
+]
+
+# The no-CD executable already contains the replacement bytes. These no-op
+# runtime hooks verify that state without trying to patch retail-only bytes.
+[[hooks]]
+address = 0x0051530D
+type = "simple"
+original_bytes = [0xEB]
+replacement_bytes = [0xEB]
+
+[[hooks]]
+address = 0x005159B6
+type = "simple"
+original_bytes = [0xEB]
+replacement_bytes = [0xEB]
+
+[[hooks]]
+address = 0x00516482
+type = "simple"
+original_bytes = [0xEB, 0x00]
+replacement_bytes = [0xEB, 0x00]
+
+[[hooks]]
+address = 0x00516488
+type = "simple"
+original_bytes = [0x00, 0x00]
+replacement_bytes = [0x00, 0x00]

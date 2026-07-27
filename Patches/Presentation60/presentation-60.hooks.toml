@@ -1,0 +1,55 @@
+[metadata]
+target_versions = [
+    "0A11A49F3F63D4BB15650F322D654553FC47234B01885B852A058FF074689DEA",
+    "D55A0BB0E920C497CE1CA76F08ED2E62FEEFCB6FF3C2901C0D59890F099BA93C"
+]
+
+# Run the monolithic gameplay update at 30 Hz, or at 20 Hz while a
+# timing-sensitive scripted state is active.
+[[hooks]]
+address = 0x00455A8B
+type = "detour"
+function = "FrameUpdateHook"
+original_bytes = [0xE8, 0x70, 0xF9, 0xFF, 0xFF]
+skip_original_bytes = true
+
+# Keep the ambient/music sequencer on the same clock as the gameplay update,
+# matching the cadence of the original single-rate game loop. DirectSound
+# playback remains asynchronous between simulation ticks.
+[[hooks]]
+address = 0x00455A9C
+type = "detour"
+function = "AudioUpdateHook"
+original_bytes = [0xE8, 0xAF, 0x3B, 0x00, 0x00]
+skip_original_bytes = true
+
+[[hooks]]
+address = 0x0045573B
+type = "detour"
+function = "AudioUpdateHook"
+original_bytes = [0xE8, 0x10, 0x3F, 0x00, 0x00]
+skip_original_bytes = true
+
+[[hooks]]
+address = 0x00455907
+type = "detour"
+function = "AudioUpdateHook"
+original_bytes = [0xE8, 0x44, 0x3D, 0x00, 0x00]
+skip_original_bytes = true
+
+# Restore authoritative simulation transforms after the render traversal.
+[[hooks]]
+address = 0x00455AA1
+type = "detour"
+function = "RenderHook"
+original_bytes = [0xE8, 0xFA, 0xFA, 0xFF, 0xFF]
+skip_original_bytes = true
+
+# Update the camera only on simulation frames, then install temporary render
+# transforms before the remainder of the central render traversal.
+[[hooks]]
+address = 0x004555FC
+type = "detour"
+function = "CameraUpdateHook"
+original_bytes = [0xE8, 0xBF, 0xB9, 0x00, 0x00]
+skip_original_bytes = true

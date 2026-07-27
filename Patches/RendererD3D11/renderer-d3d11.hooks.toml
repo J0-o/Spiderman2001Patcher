@@ -1,0 +1,13 @@
+[metadata]
+target_versions = [
+    "0A11A49F3F63D4BB15650F322D654553FC47234B01885B852A058FF074689DEA",
+    "D55A0BB0E920C497CE1CA76F08ED2E62FEEFCB6FF3C2901C0D59890F099BA93C"
+]
+
+# Keep both legacy alpha formats available for source conversion, but prefer
+# A4R4G4B4 as the upload target so partial-alpha world details are preserved.
+[[hooks]]
+address = 0x0051040F
+type = "simple"
+original_bytes = [0xF6, 0x05, 0x98, 0x88, 0x56, 0x00, 0x01, 0x74, 0x0F]
+replacement_bytes = [0xF6, 0x05, 0xE4, 0x88, 0x56, 0x00, 0x01, 0x75, 0x34]

@@ -1,0 +1,13 @@
+[patch]
+id = "text-config"
+name = "Plain-Text Spidey.cfg"
+version = "1.7.0"
+author = "Spider-Man Patch Project"
+description = "Replaces Spider-Man's binary Spidey.cfg loader and saver with a human-readable text format, including display, renderer, and presentation timing settings. The legacy file is migrated automatically."
+
+requires = []
+conflicts = []
+
+[patch.supported_versions]
+spider_man_retail = "0A11A49F3F63D4BB15650F322D654553FC47234B01885B852A058FF074689DEA"
+spider_man_no_cd = "D55A0BB0E920C497CE1CA76F08ED2E62FEEFCB6FF3C2901C0D59890F099BA93C"

@@ -1,0 +1,13 @@
+[patch]
+id = "presentation-60-interpolated"
+name = "Configurable Interpolated Presentation (Experimental)"
+version = "0.5.0"
+author = "Spider-Man Patch Project"
+description = "Provides configurable simulation and interpolation rates while keeping the ambient/music sequencer synchronized with gameplay."
+
+requires = ["renderer-d3d11"]
+conflicts = ["game-update-30hz"]
+
+[patch.supported_versions]
+spider_man_retail = "0A11A49F3F63D4BB15650F322D654553FC47234B01885B852A058FF074689DEA"
+spider_man_no_cd = "D55A0BB0E920C497CE1CA76F08ED2E62FEEFCB6FF3C2901C0D59890F099BA93C"

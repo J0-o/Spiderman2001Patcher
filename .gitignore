@@ -1,0 +1,28 @@
+# Downloaded and generated dependencies
+/.deps/
+/KPatchCore/
+/SpiderManPatcher.Runtime/
+
+# Build outputs
+/bin/
+/dist/
+**/bin/
+**/obj/
+**/Win32/
+**/x64/
+**/package/
+*.dll
+*.exe
+*.exp
+*.iobj
+*.ipdb
+*.lib
+*.pdb
+
+# Visual Studio and user-local files
+/.vs/
+*.suo
+*.user
+*.VC.db
+*.VC.opendb
+*.lnk

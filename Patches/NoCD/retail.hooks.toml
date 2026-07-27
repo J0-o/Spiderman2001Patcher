@@ -1,0 +1,32 @@
+[metadata]
+target_versions = [
+    "0A11A49F3F63D4BB15650F322D654553FC47234B01885B852A058FF074689DEA"
+]
+
+# Always skip the CD-ROM error dialog.
+[[hooks]]
+address = 0x0051530D
+type = "simple"
+original_bytes = [0x74]
+replacement_bytes = [0xEB]
+
+# Always continue startup after the CD check.
+[[hooks]]
+address = 0x005159B6
+type = "simple"
+original_bytes = [0x74]
+replacement_bytes = [0xEB]
+
+# Force the low-level CD check down its immediate-return path.
+[[hooks]]
+address = 0x00516482
+type = "simple"
+original_bytes = [0x75, 0x10]
+replacement_bytes = [0xEB, 0x00]
+
+# Change the immediate return value from 0x124 to success (zero).
+[[hooks]]
+address = 0x00516488
+type = "simple"
+original_bytes = [0x24, 0x01]
+replacement_bytes = [0x00, 0x00]

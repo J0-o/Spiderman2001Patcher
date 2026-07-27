@@ -1,0 +1,15 @@
+[metadata]
+target_versions = [
+    "0A11A49F3F63D4BB15650F322D654553FC47234B01885B852A058FF074689DEA",
+    "D55A0BB0E920C497CE1CA76F08ED2E62FEEFCB6FF3C2901C0D59890F099BA93C"
+]
+
+# Set the signed 16-bit far-distance field after scripted camera updates and
+# immediately before the renderer copies it into the active viewport.
+[[hooks]]
+address = 0x00472EDD
+type = "detour"
+function = "DrawDistanceHook"
+original_bytes = [
+    0x66, 0x8B, 0x0D, 0x60, 0xE5, 0x64, 0x00
+]
