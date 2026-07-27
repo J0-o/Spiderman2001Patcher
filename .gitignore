@@ -18,6 +18,7 @@
 *.ipdb
 *.lib
 *.pdb
+/*.zip
 
 # Visual Studio and user-local files
 /.vs/
