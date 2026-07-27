@@ -1,15 +1,14 @@
-# Spider-Man (Neversoft 2001) Patch Manager
+# Spider-Man (Neversoft 2001) Patcher
+
+When asked about the possibilities of a remake:
+"While I would initially be reticent because of the nightmarish licensing and approval processes that are around these days... I absolutely would do it...” - Chad Findely
+
+## Goals
+The Neversoft 2000/2001 Spider-man game seems to have become abandonware. The goal of this repository is to provide tools and fixes that resolve bugs in the PC version and improve its compatibility with modern hardware and operating systems.
 
 This is a port of KotOR Patch Manager's runtime patch framework.
 Every launch discovers and applies every top-level `.kpatch` file in the patch
 directory, then starts Spider-Man with the 32-bit runtime DLL injected.
-
-Only Spider-Man source and explicit upstream replacements are kept in this
-repository. The build downloads the pinned KotOR Patch Manager source recorded
-in `dependencies.lock.json`, following the sources, replacements, removals, and
-ignored folders in `source-layout.txt`. Downloaded and generated source is
-excluded by `.gitignore`. See `THIRD_PARTY.md` for provenance and licensing
-notes.
 
 Supported executable builds:
 
