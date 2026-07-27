@@ -47,16 +47,15 @@ The remaining top-level source is shared infrastructure:
 
 ## Use
 
-Copy the contents of `dist` beside `SpideyPC.exe`, put all `.kpatch` files in
-the adjacent `patches` directory, and run:
+Copy `SpideyLauncer.exe`, and the `Patches` folder to the game directory. Then use the launcher to play the game.
 
-```powershell
+```
 .\SpideyLauncher.exe
 ```
 
 Paths can also be supplied explicitly:
 
-```powershell
+```
 .\SpideyLauncher.exe "C:\Games\Spider-Man\SpideyPC.exe" "C:\Mods\Spider-Man\Patches"
 ```
 
