@@ -1,6 +1,6 @@
-# Spider-Man Patch Manager
+# Spider-Man (Neversoft 2001) Patch Manager
 
-This is a UI-free adaptation of KotOR Patch Manager's runtime patch framework.
+This is a port of KotOR Patch Manager's runtime patch framework.
 Every launch discovers and applies every top-level `.kpatch` file in the patch
 directory, then starts Spider-Man with the 32-bit runtime DLL injected.
 
@@ -31,24 +31,6 @@ Run:
 ```powershell
 .\build.ps1
 ```
-
-On the first run, the script creates a sparse checkout under `.deps`, verifies
-the pinned revision, and downloads only `src/KPatchCore` and
-`src/KotorPatcher`. The upstream `Patches` directory and the other ignored
-folders in `source-layout.txt` are not materialized. The script reconstructs
-`KPatchCore` and `SpiderManPatcher.Runtime`, applies only the listed replacement
-files, removes the listed unused paths, and builds the complete patcher. Later
-builds reuse the verified checkout.
-
-The compact deployable build is written to `dist`: one self-contained launcher
-with the injection runtime embedded, plus this repository's packaged
-Spider-Man patches.
-
-Do not edit the generated `KPatchCore` or `SpiderManPatcher.Runtime`
-directories. Put replacement or added files under `overrides/<source-name>`
-and list every replacement/addition, removal, or ignored upstream folder in
-`source-layout.txt`. The build rejects unlisted override files.
-
 ## Source layout
 
 Every patch is self-contained in one directory under `Patches`. A patch
