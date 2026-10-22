@@ -41,6 +41,7 @@ remove KPatchCore Validators/PatchValidator.cs
 
 replace KotorPatcher KotorPatcher.vcxproj
 replace KotorPatcher src/core/config_reader.cpp
+replace KotorPatcher src/platform_win32.cpp
 
 remove KotorPatcher README.md
 remove KotorPatcher build-mingw.sh
