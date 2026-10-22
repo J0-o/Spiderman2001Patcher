@@ -1,7 +1,7 @@
 LIBRARY "windows_x86"
 EXPORTS
-    StoredSfxVolumeHook
-    ModifySfxVolumeHook
+    StoredSfxVolume
+    ModifySfxVolume
     SpideyStoredSfxVolumeAdjustCount DATA
     SpideyUpdatedSfxVolumeAdjustCount DATA
     SpideyLastSfxAuthoredModifier DATA

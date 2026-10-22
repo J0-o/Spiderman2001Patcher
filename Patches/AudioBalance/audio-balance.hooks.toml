@@ -9,16 +9,34 @@ target_versions = [
 [[hooks]]
 address = 0x00472094
 type = "detour"
-function = "ModifySfxVolumeHook"
+function = "ModifySfxVolume"
 original_bytes = [0xE8, 0xA7, 0xFC, 0xFF, 0xFF]
 skip_original_bytes = true
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+4]"
+type = "int"
+[[hooks.parameters]]
+source = "[esp+8]"
+type = "int"
 
 [[hooks]]
 address = 0x0047218A
 type = "detour"
-function = "ModifySfxVolumeHook"
+function = "ModifySfxVolume"
 original_bytes = [0xE8, 0xB1, 0xFB, 0xFF, 0xFF]
 skip_original_bytes = true
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+4]"
+type = "int"
+[[hooks.parameters]]
+source = "[esp+8]"
+type = "int"
 
 # Pause recovery already uses the authored modifier, but also applies the
 # global master volume a second time. Recalculate from the stored voice level
@@ -26,29 +44,41 @@ skip_original_bytes = true
 [[hooks]]
 address = 0x004722D9
 type = "detour"
-function = "StoredSfxVolumeHook"
+function = "StoredSfxVolume"
 original_bytes = [0xE8, 0x12, 0x20, 0x09, 0x00]
 skip_original_bytes = true
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "int"
 
 # The original initial-playback path stores the authored modifier but passes
 # an unmodified volume to DirectSound in each of its three playback branches.
 [[hooks]]
 address = 0x00472817
 type = "detour"
-function = "StoredSfxVolumeHook"
+function = "StoredSfxVolume"
 original_bytes = [0xE8, 0xD4, 0x1A, 0x09, 0x00]
 skip_original_bytes = true
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "int"
 
 [[hooks]]
 address = 0x0047283B
 type = "detour"
-function = "StoredSfxVolumeHook"
+function = "StoredSfxVolume"
 original_bytes = [0xE8, 0xB0, 0x1A, 0x09, 0x00]
 skip_original_bytes = true
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "int"
 
 [[hooks]]
 address = 0x00472856
 type = "detour"
-function = "StoredSfxVolumeHook"
+function = "StoredSfxVolume"
 original_bytes = [0xE8, 0x95, 0x1A, 0x09, 0x00]
 skip_original_bytes = true
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "int"

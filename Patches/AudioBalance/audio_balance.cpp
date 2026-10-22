@@ -101,7 +101,7 @@ namespace
     }
 }
 
-void StoredSfxVolume(int voice)
+extern "C" __declspec(dllexport) void __cdecl StoredSfxVolume(int voice)
 {
     SfxEntry& entry = Entry(voice);
     const int adjusted =
@@ -111,7 +111,7 @@ void StoredSfxVolume(int voice)
     InterlockedIncrement(&SpideyStoredSfxVolumeAdjustCount);
 }
 
-void ModifySfxVolume(
+extern "C" __declspec(dllexport) void __cdecl ModifySfxVolume(
     std::uint32_t voiceMask,
     int left,
     int right)
@@ -143,35 +143,6 @@ void ModifySfxVolume(
         SetVolume(voice, ConvertRawVolume(adjusted));
         RecordAdjustment(rawVolume, entry.authoredVolume, adjusted);
         InterlockedIncrement(&SpideyUpdatedSfxVolumeAdjustCount);
-    }
-}
-
-// Detour wrappers enter through JMP after the game has pushed the original
-// call arguments. The runtime then PUSHAD/PUSHFDs and CALLs this export.
-// PUSHAD's saved ESP is therefore the original argument-list pointer.
-extern "C" __declspec(dllexport, naked) void StoredSfxVolumeHook()
-{
-    __asm
-    {
-        mov eax, dword ptr [esp + 20]
-        push dword ptr [eax]
-        call StoredSfxVolume
-        add esp, 4
-        ret
-    }
-}
-
-extern "C" __declspec(dllexport, naked) void ModifySfxVolumeHook()
-{
-    __asm
-    {
-        mov eax, dword ptr [esp + 20]
-        push dword ptr [eax + 8]
-        push dword ptr [eax + 4]
-        push dword ptr [eax]
-        call ModifySfxVolume
-        add esp, 12
-        ret
     }
 }
 

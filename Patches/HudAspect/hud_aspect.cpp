@@ -85,33 +85,14 @@ extern "C" __declspec(dllexport) void __cdecl HudDisplayHook()
     InterlockedDecrement(&HudDisplayDepth);
 }
 
-// The runtime reaches this export after PUSHAD/PUSHFD. PUSHAD's saved ESP,
-// at [ESP+0x14] on export entry, points to the original return address.
-// The quad's first argument follows it.
-extern "C" __declspec(dllexport, naked) void HudQuadHook()
+extern "C" __declspec(dllexport) void __cdecl HudQuadHook(float* arguments)
 {
-    __asm
-    {
-        mov eax, dword ptr [esp + 20]
-        add eax, 4
-        push eax
-        call CorrectHudQuad
-        add esp, 4
-        ret
-    }
+    CorrectHudQuad(arguments);
 }
 
-extern "C" __declspec(dllexport, naked) void HudRectangleHook()
+extern "C" __declspec(dllexport) void __cdecl HudRectangleHook(float* arguments)
 {
-    __asm
-    {
-        mov eax, dword ptr [esp + 20]
-        add eax, 4
-        push eax
-        call CorrectHudRectangle
-        add esp, 4
-        ret
-    }
+    CorrectHudRectangle(arguments);
 }
 
 BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID)

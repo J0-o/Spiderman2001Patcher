@@ -22,6 +22,9 @@ original_bytes = [
     0xD9, 0x44, 0x24, 0x54,
     0xA1, 0x78, 0x81, 0x56, 0x00
 ]
+[[hooks.parameters]]
+source = "esp+4"
+type = "pointer"
 
 # Flat-shaded HUD bars use a separate rectangle submitter. Correct its X
 # position and width while preserving its vertical geometry.
@@ -33,3 +36,6 @@ original_bytes = [
     0xD9, 0x44, 0x24, 0x28,
     0xA1, 0x78, 0x81, 0x56, 0x00
 ]
+[[hooks.parameters]]
+source = "esp+4"
+type = "pointer"
