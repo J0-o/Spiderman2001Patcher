@@ -10,28 +10,28 @@
 
 source KPatchCore src/KPatchCore KPatchCore
 source KotorPatcher src/KotorPatcher SpiderManPatcher.Runtime
+source KPatchLib lib lib
+source KPatchCommon Patches/Common KPatchCommon
 
 replace KPatchCore KPatchCore.csproj
 replace KPatchCore Applicators/PatchApplicator.cs
 replace KPatchCore Applicators/PatchRemover.cs
-replace KPatchCore Common/PathHelpers.cs
 replace KPatchCore Detectors/GameDetector.cs
 replace KPatchCore Launcher/GameLauncher.cs
 replace KPatchCore Launcher/LaunchResult.cs
 replace KPatchCore Launcher/ProcessInjector.cs
-replace KPatchCore Launcher/Win32.cs
 replace KPatchCore Managers/InstallStateManager.cs
 replace KPatchCore Managers/PatchOrchestrator.cs
 replace KPatchCore Managers/PatchRepository.cs
 replace KPatchCore Models/GameVersion.cs
-replace KPatchCore Models/ManagedInstallState.cs
-replace KPatchCore Validators/GameVersionValidator.cs
 
 remove KPatchCore Applicators/KProxyInstaller.cs
 remove KPatchCore Launcher/DeploymentPolicy.cs
+remove KPatchCore Launcher/ConfiguredGameLauncher.cs
+remove KPatchCore Launcher/DirectGameLauncher.cs
 remove KPatchCore Launcher/IGameLauncher.cs
 remove KPatchCore Launcher/LaunchConfig.cs
-remove KPatchCore Launcher/ProxyGameLauncher.cs
+remove KPatchCore Launcher/LaunchDispatcher.cs
 remove KPatchCore Launcher/SteamLauncher.cs
 remove KPatchCore Launcher/UnsupportedGameInjector.cs
 remove KPatchCore Launcher/WindowsGameInjector.cs
@@ -40,17 +40,14 @@ remove KPatchCore README.md
 remove KPatchCore Validators/PatchValidator.cs
 
 replace KotorPatcher KotorPatcher.vcxproj
-replace KotorPatcher src/config_reader.cpp
-replace KotorPatcher src/patcher.cpp
+replace KotorPatcher src/core/config_reader.cpp
 
 remove KotorPatcher README.md
 remove KotorPatcher build-mingw.sh
 remove KotorPatcher docs
 
 ignore AddressDatabases
-ignore Patches
 ignore docs
-ignore lib
 ignore tools
 ignore src/KPatchLauncher
 ignore src/KProxy

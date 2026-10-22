@@ -8,7 +8,20 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
   <ItemGroup>
+    <!-- TryParseConstant is held to tests/constant-sources.tsv, the corpus the patcher's
+         own parser is held to. Testing it through IsValidFor instead would conflate the
+         grammar with the per-type width check. -->
+    <InternalsVisibleTo Include="KPatchCore.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LibObjectFile" Version="2.3.1" />
     <PackageReference Include="Tomlyn" Version="0.19.0" />
   </ItemGroup>
 

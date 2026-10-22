@@ -1,3 +1,5 @@
+#define NOMINMAX
+
 #include <Windows.h>
 
 #include <array>
@@ -5,6 +7,8 @@
 #include <cstdlib>
 #include <sstream>
 #include <string>
+
+#pragma comment(lib, "user32.lib")
 
 namespace
 {

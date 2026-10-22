@@ -45,9 +45,10 @@ Build the renderer and test as Win32:
 
 ```powershell
 $msbuild = "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe"
-& $msbuild .\SpiderManRenderer.vcxproj /p:Configuration=Debug /p:Platform=Win32
+$env:SKIP_PAUSE = "1"
+cmd /c ..\create-patch.bat
 & $msbuild .\tests\RendererSmokeTest.vcxproj /p:Configuration=Debug /p:Platform=Win32
-.\tests\bin\Debug\RendererSmokeTest.exe .\bin\Debug\windows_x86.dll
+.\tests\bin\Debug\RendererSmokeTest.exe .\windows_x86.dll
 ```
 
 The smoke test loads the patch DLL, verifies the executable import replacement,

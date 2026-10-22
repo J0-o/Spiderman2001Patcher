@@ -21,14 +21,16 @@ public sealed class PatchOrchestrator
         string gameExePath,
         IEnumerable<string> patchIds,
         bool createBackup = true,
-        string? patcherDllPath = null)
+        string? patcherDllPath = null,
+        Dictionary<string, Dictionary<string, string>>? optionValues = null)
     {
         return _applicator.InstallPatches(new PatchApplicator.InstallOptions
         {
             GameExePath = gameExePath,
             PatchIds = patchIds.ToList(),
             CreateBackup = createBackup,
-            PatcherDllPath = patcherDllPath
+            PatcherDllPath = patcherDllPath,
+            OptionValues = optionValues ?? new()
         });
     }
 

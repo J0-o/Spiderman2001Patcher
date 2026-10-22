@@ -1,7 +1,7 @@
 {
   "kotorPatchManager": {
     "repository": "https://github.com/LaneDibello/Kotor-Patch-Manager.git",
-    "revision": "ca58d1afbbe235846dfc1fa0c0dc95c5944d9dff",
-    "version": "0.6.0"
+    "revision": "eaa7bdae416d391418442f5c7b94f1e278a0cf12",
+    "version": "master@eaa7bda"
   }
 }

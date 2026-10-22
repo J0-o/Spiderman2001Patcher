@@ -1,6 +1,10 @@
-#include "direct_draw.h"
+#define NOMINMAX
+#define DIRECTDRAW_VERSION 0x0700
+#define DIRECT3D_VERSION 0x0700
 
-#include "renderer_runtime.h"
+#include "include/direct_draw.h"
+
+#include "include/renderer_runtime.h"
 
 #include <algorithm>
 #include <cstring>

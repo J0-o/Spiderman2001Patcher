@@ -176,6 +176,14 @@ public static class PatchRemover
                 SafeDeleteFile(gameDir, fileName, removedFiles, messages);
             }
 
+            // Remove only KPM's applied option sections; preserve the rest of each
+            // patch-owned settings file.
+            foreach (var optionsFile in PatchOptionsIni.RemoveSections(gameDir))
+            {
+                removedFiles.Add(optionsFile);
+                messages.Add($"  Removed {optionsFile}");
+            }
+
             // Step 4: Verify clean state
             messages.Add("Step 4/4: Verifying clean state...");
             var configPath = Path.Combine(gameDir, "patch_config.toml");

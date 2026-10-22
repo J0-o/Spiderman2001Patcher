@@ -1,4 +1,6 @@
-#include "iat_hook.h"
+#define NOMINMAX
+
+#include "include/iat_hook.h"
 
 #include <Windows.h>
 
