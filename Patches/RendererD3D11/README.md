@@ -23,7 +23,9 @@ Implemented:
 - the game's requested 16-bit depth-buffer precision;
 - window-message dispatch during windowed presentation;
 - conversion of the game's 16-, 24-, and 32-bit surface formats to RGBA8
-  textures;
+  textures when the native GPU format is unavailable;
+- direct shader-resource uploads for supported RGB565, ARGB1555, and ARGB4444
+  textures, retaining their original 16-bit VRAM footprint;
 - the game's temporary-surface-to-texture `Blt` upload path;
 - transformed/lit `D3DPT_TRIANGLEFAN` submission through a dynamic D3D11
   vertex buffer;

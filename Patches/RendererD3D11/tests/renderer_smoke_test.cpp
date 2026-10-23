@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <d3d.h>
 #include <ddraw.h>
+#include <dxgiformat.h>
 
 #include <cstdio>
 #include <cstring>
@@ -10,6 +11,7 @@ namespace
 {
     struct TextureFormats
     {
+        bool hasRgb565;
         bool hasArgb1555;
         bool hasArgb4444;
     };
@@ -45,6 +47,14 @@ namespace
     {
         auto* formats = static_cast<TextureFormats*>(context);
         if (format->dwRGBBitCount == 16 &&
+            format->dwRGBAlphaBitMask == 0 &&
+            format->dwRBitMask == 0xF800 &&
+            format->dwGBitMask == 0x07E0 &&
+            format->dwBBitMask == 0x001F)
+        {
+            formats->hasRgb565 = true;
+        }
+        if (format->dwRGBBitCount == 16 &&
             format->dwRGBAlphaBitMask == 0x8000 &&
             format->dwRBitMask == 0x7C00 &&
             format->dwGBitMask == 0x03E0 &&
@@ -77,6 +87,15 @@ int wmain(int argc, wchar_t** argv)
     if (!renderer)
     {
         std::fwprintf(stderr, L"LoadLibrary failed: %lu\n", GetLastError());
+        return 3;
+    }
+
+    auto* lastTextureFormat = reinterpret_cast<volatile LONG*>(
+        GetProcAddress(renderer, "SpideyLastTextureFormat"));
+    if (!lastTextureFormat)
+    {
+        std::fprintf(stderr, "texture format diagnostic export is missing\n");
+        FreeLibrary(renderer);
         return 3;
     }
 
@@ -252,7 +271,9 @@ int wmain(int argc, wchar_t** argv)
             &textureFormats);
     }
     if (SUCCEEDED(result) &&
-        (!textureFormats.hasArgb1555 || !textureFormats.hasArgb4444))
+        (!textureFormats.hasRgb565 ||
+         !textureFormats.hasArgb1555 ||
+         !textureFormats.hasArgb4444))
     {
         result = E_FAIL;
     }
@@ -357,6 +378,12 @@ int wmain(int argc, wchar_t** argv)
             const_cast<TestVertex*>(vertices),
             ARRAYSIZE(vertices),
             0);
+    }
+    if (SUCCEEDED(result) &&
+        *lastTextureFormat != DXGI_FORMAT_B4G4R4A4_UNORM &&
+        *lastTextureFormat != DXGI_FORMAT_R8G8B8A8_UNORM)
+    {
+        result = E_FAIL;
     }
     if (SUCCEEDED(result))
     {
@@ -508,6 +535,7 @@ int wmain(int argc, wchar_t** argv)
     {
         primarySurface->Release();
     }
+    const LONG uploadedTextureFormat = *lastTextureFormat;
     directDraw->Release();
     DestroyWindow(window);
     FreeLibrary(renderer);
@@ -519,8 +547,9 @@ int wmain(int argc, wchar_t** argv)
     }
 
     std::printf(
-        "renderer smoke test passed: max texture %lux%lu\n",
+        "renderer smoke test passed: max texture %lux%lu, texture format %ld\n",
         caps.dwMaxTextureWidth,
-        caps.dwMaxTextureHeight);
+        caps.dwMaxTextureHeight,
+        uploadedTextureFormat);
     return 0;
 }

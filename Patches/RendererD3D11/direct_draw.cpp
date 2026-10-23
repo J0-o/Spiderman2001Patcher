@@ -10,6 +10,11 @@
 #include <cstring>
 #include <new>
 
+extern "C"
+{
+    extern volatile LONG SpideyLastTextureFormat;
+}
+
 namespace
 {
     DDPIXELFORMAT MakeRgb565()
@@ -144,6 +149,51 @@ namespace
         const DWORD maximum = mask >> shift;
         const DWORD value = (pixel & mask) >> shift;
         return static_cast<BYTE>((value * 255U + maximum / 2U) / maximum);
+    }
+
+    DXGI_FORMAT NativeTextureFormat(const DDPIXELFORMAT& format)
+    {
+        if (format.dwRGBBitCount != 16)
+        {
+            return DXGI_FORMAT_UNKNOWN;
+        }
+        if (format.dwRGBAlphaBitMask == 0 &&
+            format.dwRBitMask == 0xF800 &&
+            format.dwGBitMask == 0x07E0 &&
+            format.dwBBitMask == 0x001F)
+        {
+            return DXGI_FORMAT_B5G6R5_UNORM;
+        }
+        if (format.dwRGBAlphaBitMask == 0x8000 &&
+            format.dwRBitMask == 0x7C00 &&
+            format.dwGBitMask == 0x03E0 &&
+            format.dwBBitMask == 0x001F)
+        {
+            return DXGI_FORMAT_B5G5R5A1_UNORM;
+        }
+        if (format.dwRGBAlphaBitMask == 0xF000 &&
+            format.dwRBitMask == 0x0F00 &&
+            format.dwGBitMask == 0x00F0 &&
+            format.dwBBitMask == 0x000F)
+        {
+            return DXGI_FORMAT_B4G4R4A4_UNORM;
+        }
+        return DXGI_FORMAT_UNKNOWN;
+    }
+
+    bool SupportsSampledTexture(ID3D11Device* device, DXGI_FORMAT format)
+    {
+        if (format == DXGI_FORMAT_UNKNOWN)
+        {
+            return false;
+        }
+
+        UINT support = 0;
+        const UINT required =
+            D3D11_FORMAT_SUPPORT_TEXTURE2D |
+            D3D11_FORMAT_SUPPORT_SHADER_SAMPLE;
+        return SUCCEEDED(device->CheckFormatSupport(format, &support)) &&
+               (support & required) == required;
     }
 }
 
@@ -781,30 +831,40 @@ namespace Spidey
         const UINT bits = std::max<UINT>(format.dwRGBBitCount, 16);
         const UINT bytesPerPixel = std::max<UINT>(bits / 8, 2);
         const UINT sourcePitch = width * bytesPerPixel;
-        std::vector<std::uint8_t> rgba(
-            static_cast<size_t>(width) * height * 4);
+        DXGI_FORMAT textureFormat = NativeTextureFormat(format);
+        const void* textureData = m_cpuData.data();
+        UINT texturePitch = sourcePitch;
+        std::vector<std::uint8_t> rgba;
 
-        for (UINT y = 0; y < height; ++y)
+        if (!SupportsSampledTexture(runtime.Device(), textureFormat))
         {
-            const std::uint8_t* sourceRow =
-                m_cpuData.data() + static_cast<size_t>(sourcePitch) * y;
-            std::uint8_t* destinationRow =
-                rgba.data() + static_cast<size_t>(width) * y * 4;
-            for (UINT x = 0; x < width; ++x)
+            textureFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+            texturePitch = width * 4;
+            rgba.resize(static_cast<size_t>(texturePitch) * height);
+            textureData = rgba.data();
+
+            for (UINT y = 0; y < height; ++y)
             {
-                DWORD pixel = 0;
-                std::memcpy(
-                    &pixel,
-                    sourceRow + static_cast<size_t>(x) * bytesPerPixel,
-                    bytesPerPixel);
-                destinationRow[x * 4 + 0] =
-                    ExpandChannel(pixel, format.dwRBitMask, 0);
-                destinationRow[x * 4 + 1] =
-                    ExpandChannel(pixel, format.dwGBitMask, 0);
-                destinationRow[x * 4 + 2] =
-                    ExpandChannel(pixel, format.dwBBitMask, 0);
-                destinationRow[x * 4 + 3] =
-                    ExpandChannel(pixel, format.dwRGBAlphaBitMask, 255);
+                const std::uint8_t* sourceRow =
+                    m_cpuData.data() + static_cast<size_t>(sourcePitch) * y;
+                std::uint8_t* destinationRow =
+                    rgba.data() + static_cast<size_t>(texturePitch) * y;
+                for (UINT x = 0; x < width; ++x)
+                {
+                    DWORD pixel = 0;
+                    std::memcpy(
+                        &pixel,
+                        sourceRow + static_cast<size_t>(x) * bytesPerPixel,
+                        bytesPerPixel);
+                    destinationRow[x * 4 + 0] =
+                        ExpandChannel(pixel, format.dwRBitMask, 0);
+                    destinationRow[x * 4 + 1] =
+                        ExpandChannel(pixel, format.dwGBitMask, 0);
+                    destinationRow[x * 4 + 2] =
+                        ExpandChannel(pixel, format.dwBBitMask, 0);
+                    destinationRow[x * 4 + 3] =
+                        ExpandChannel(pixel, format.dwRGBAlphaBitMask, 255);
+                }
             }
         }
 
@@ -813,14 +873,14 @@ namespace Spidey
         textureDescription.Height = height;
         textureDescription.MipLevels = 1;
         textureDescription.ArraySize = 1;
-        textureDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        textureDescription.Format = textureFormat;
         textureDescription.SampleDesc.Count = 1;
         textureDescription.Usage = D3D11_USAGE_DEFAULT;
         textureDescription.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 
         D3D11_SUBRESOURCE_DATA initialData{};
-        initialData.pSysMem = rgba.data();
-        initialData.SysMemPitch = width * 4;
+        initialData.pSysMem = textureData;
+        initialData.SysMemPitch = texturePitch;
         result = runtime.Device()->CreateTexture2D(
             &textureDescription,
             &initialData,
@@ -840,6 +900,9 @@ namespace Spidey
 
         m_textureDirty = false;
         m_textureGeneration = runtime.DeviceGeneration();
+        InterlockedExchange(
+            &SpideyLastTextureFormat,
+            static_cast<LONG>(textureFormat));
         *view = m_textureView;
         return S_OK;
     }

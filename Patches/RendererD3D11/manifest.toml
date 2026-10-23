@@ -1,7 +1,7 @@
 [patch]
 id = "renderer-d3d11"
 name = "Spider-Man D3D11 Renderer"
-version = "0.6.0"
+version = "0.6.1"
 author = "Spider-Man Patch Project"
 description = "Replaces Spider-Man's DirectDraw 7 and Direct3D 7 renderer with a game-specific Direct3D 11 implementation, including legacy linear fog render states."
 
