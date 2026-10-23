@@ -1,0 +1,7 @@
+LIBRARY "windows_x86"
+EXPORTS
+    CreateTextureWithOverride
+    CreateIndexed256WithMarker
+    CreateIndexed16WithMarker
+    SpideyTextureOverrideCount DATA
+    SpideyTextureOverrideErrorCount DATA

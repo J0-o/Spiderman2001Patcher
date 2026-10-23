@@ -1,0 +1,376 @@
+[metadata]
+target_versions = [
+    "0A11A49F3F63D4BB15650F322D654553FC47234B01885B852A058FF074689DEA",
+    "D55A0BB0E920C497CE1CA76F08ED2E62FEEFCB6FF3C2901C0D59890F099BA93C"
+]
+
+# The old 8-bit and 4-bit bundle paths convert their source indices before
+# reaching the common texture creator. These handlers remember the record
+# identity and explicitly call the original function. The stolen instruction
+# is a relative CALL, so it must not be replayed from the relocated wrapper.
+[[hooks]]
+address = 0x004CA1E8
+type = "detour"
+function = "CreateIndexed256WithMarker"
+original_bytes = [0xE8, 0xB3, 0x3F, 0x04, 0x00]
+skip_original_bytes = true
+preserve_registers = true
+exclude_from_restore = ["eax"]
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+4]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+8]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+12]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+16]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+20]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+24]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+28]"
+type = "uint"
+
+[[hooks]]
+address = 0x004CA289
+type = "detour"
+function = "CreateIndexed16WithMarker"
+original_bytes = [0xE8, 0xF2, 0x45, 0x04, 0x00]
+skip_original_bytes = true
+preserve_registers = true
+exclude_from_restore = ["eax"]
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+4]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+8]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+12]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+16]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+20]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+24]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+28]"
+type = "uint"
+
+# Every authored texture path converges on PCTex_CreateTexturePVRInId. These
+# are all of its external call sites: indexed, standalone PVR, embedded PVR,
+# renderer reload, and both LTI/BMP branches. Its internal tiling recursion is
+# intentionally left untouched.
+[[hooks]]
+address = 0x0050E4CF
+type = "detour"
+function = "CreateTextureWithOverride"
+original_bytes = [0xE8, 0xFC, 0x11, 0x00, 0x00]
+skip_original_bytes = true
+preserve_registers = true
+exclude_from_restore = ["eax"]
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "int"
+[[hooks.parameters]]
+source = "[esp+4]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+8]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+12]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+16]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+20]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+24]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+28]"
+type = "uint"
+
+[[hooks]]
+address = 0x0050E57D
+type = "detour"
+function = "CreateTextureWithOverride"
+original_bytes = [0xE8, 0x4E, 0x11, 0x00, 0x00]
+skip_original_bytes = true
+preserve_registers = true
+exclude_from_restore = ["eax"]
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "int"
+[[hooks.parameters]]
+source = "[esp+4]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+8]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+12]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+16]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+20]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+24]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+28]"
+type = "uint"
+
+[[hooks]]
+address = 0x0050EB4A
+type = "detour"
+function = "CreateTextureWithOverride"
+original_bytes = [0xE8, 0x81, 0x0B, 0x00, 0x00]
+skip_original_bytes = true
+preserve_registers = true
+exclude_from_restore = ["eax"]
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "int"
+[[hooks.parameters]]
+source = "[esp+4]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+8]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+12]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+16]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+20]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+24]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+28]"
+type = "uint"
+
+[[hooks]]
+address = 0x0050EBEE
+type = "detour"
+function = "CreateTextureWithOverride"
+original_bytes = [0xE8, 0xDD, 0x0A, 0x00, 0x00]
+skip_original_bytes = true
+preserve_registers = true
+exclude_from_restore = ["eax"]
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "int"
+[[hooks.parameters]]
+source = "[esp+4]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+8]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+12]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+16]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+20]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+24]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+28]"
+type = "uint"
+
+[[hooks]]
+address = 0x0050ED78
+type = "detour"
+function = "CreateTextureWithOverride"
+original_bytes = [0xE8, 0x53, 0x09, 0x00, 0x00]
+skip_original_bytes = true
+preserve_registers = true
+exclude_from_restore = ["eax"]
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "int"
+[[hooks.parameters]]
+source = "[esp+4]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+8]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+12]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+16]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+20]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+24]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+28]"
+type = "uint"
+
+[[hooks]]
+address = 0x0050F45F
+type = "detour"
+function = "CreateTextureWithOverride"
+original_bytes = [0xE8, 0x6C, 0x02, 0x00, 0x00]
+skip_original_bytes = true
+preserve_registers = true
+exclude_from_restore = ["eax"]
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "int"
+[[hooks.parameters]]
+source = "[esp+4]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+8]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+12]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+16]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+20]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+24]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+28]"
+type = "uint"
+
+[[hooks]]
+address = 0x00510688
+type = "detour"
+function = "CreateTextureWithOverride"
+original_bytes = [0xE8, 0x43, 0xF0, 0xFF, 0xFF]
+skip_original_bytes = true
+preserve_registers = true
+exclude_from_restore = ["eax"]
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "int"
+[[hooks.parameters]]
+source = "[esp+4]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+8]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+12]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+16]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+20]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+24]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+28]"
+type = "uint"
+
+[[hooks]]
+address = 0x00510C28
+type = "detour"
+function = "CreateTextureWithOverride"
+original_bytes = [0xE8, 0xA3, 0xEA, 0xFF, 0xFF]
+skip_original_bytes = true
+preserve_registers = true
+exclude_from_restore = ["eax"]
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "int"
+[[hooks.parameters]]
+source = "[esp+4]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+8]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+12]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+16]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+20]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+24]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+28]"
+type = "uint"
+
+[[hooks]]
+address = 0x00510C7A
+type = "detour"
+function = "CreateTextureWithOverride"
+original_bytes = [0xE8, 0x51, 0xEA, 0xFF, 0xFF]
+skip_original_bytes = true
+preserve_registers = true
+exclude_from_restore = ["eax"]
+[[hooks.parameters]]
+source = "[esp+0]"
+type = "int"
+[[hooks.parameters]]
+source = "[esp+4]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+8]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+12]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+16]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+20]"
+type = "uint"
+[[hooks.parameters]]
+source = "[esp+24]"
+type = "pointer"
+[[hooks.parameters]]
+source = "[esp+28]"
+type = "uint"
