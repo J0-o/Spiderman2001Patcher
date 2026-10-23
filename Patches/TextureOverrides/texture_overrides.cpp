@@ -17,6 +17,10 @@ namespace
     constexpr std::uintptr_t CreateTextureAddress = 0x0050F6D0;
     constexpr std::uintptr_t CreateIndexed256Address = 0x0050E1A0;
     constexpr std::uintptr_t CreateIndexed16Address = 0x0050E880;
+    constexpr std::uintptr_t PreferredTextureFormatAddress = 0x00ADB36C;
+    constexpr std::uintptr_t Argb8888FormatFlagsAddress = 0x0056897C;
+    constexpr int Argb8888FormatIndex = 3;
+    constexpr unsigned LinearArgb8888Type = 0x0907;
     constexpr std::uintptr_t CurrentRegionAddress = 0x006AB8B8;
     constexpr std::uintptr_t RegionsAddress = 0x006B2440;
     constexpr int RegionCount = 40;
@@ -62,7 +66,7 @@ namespace
 
     struct DecodedBmp
     {
-        std::uint16_t* pixels;
+        std::uint32_t* pixels;
     };
 
     char g_gameDirectory[PathCapacity] = {};
@@ -432,36 +436,46 @@ namespace
         return ok;
     }
 
-    std::uint16_t ConvertPixel(
+    constexpr std::uint32_t PackArgb8888(
         std::uint8_t red,
         std::uint8_t green,
         std::uint8_t blue,
-        std::uint8_t alpha,
-        unsigned format)
+        std::uint8_t alpha)
     {
-        switch (format)
-        {
-        case 0:
-            return static_cast<std::uint16_t>(
-                (alpha >= 128 ? 0x8000 : 0) |
-                ((red >> 3) << 10) |
-                ((green >> 3) << 5) |
-                (blue >> 3));
-        case 1:
-            return static_cast<std::uint16_t>(
-                ((red >> 3) << 11) |
-                ((green >> 2) << 5) |
-                (blue >> 3));
-        case 2:
-            return static_cast<std::uint16_t>(
-                ((alpha >> 4) << 12) |
-                ((red >> 4) << 8) |
-                ((green >> 4) << 4) |
-                (blue >> 4));
-        default:
-            return 0;
-        }
+        return (static_cast<std::uint32_t>(alpha) << 24) |
+            (static_cast<std::uint32_t>(red) << 16) |
+            (static_cast<std::uint32_t>(green) << 8) |
+            blue;
     }
+
+    static_assert(
+        PackArgb8888(0x12, 0x34, 0x56, 0x78) == 0x78123456,
+        "ARGB8888 packing must produce BGRA bytes on little-endian x86");
+
+    class ScopedPreferredTextureFormat
+    {
+    public:
+        explicit ScopedPreferredTextureFormat(LONG format)
+            : m_preferred(reinterpret_cast<volatile LONG*>(
+                  PreferredTextureFormatAddress)),
+              m_saved(*m_preferred)
+        {
+            *m_preferred = format;
+        }
+
+        ~ScopedPreferredTextureFormat()
+        {
+            *m_preferred = m_saved;
+        }
+
+        ScopedPreferredTextureFormat(const ScopedPreferredTextureFormat&) = delete;
+        ScopedPreferredTextureFormat& operator=(
+            const ScopedPreferredTextureFormat&) = delete;
+
+    private:
+        volatile LONG* m_preferred;
+        LONG m_saved;
+    };
 
     bool DecodeBmp(
         const char* path,
@@ -469,11 +483,10 @@ namespace
         unsigned targetHeight,
         unsigned expectedWidth,
         unsigned expectedHeight,
-        unsigned pixelFormat,
         DecodedBmp& decoded)
     {
         decoded.pixels = nullptr;
-        if (pixelFormat > 2 || targetWidth == 0 || targetHeight == 0)
+        if (targetWidth == 0 || targetHeight == 0)
         {
             return false;
         }
@@ -513,17 +526,17 @@ namespace
         const std::uint64_t outputPixels =
             static_cast<std::uint64_t>(targetWidth) * targetHeight;
         valid = valid && pixelOffset <= fileSize && sourceBytes <= fileSize - pixelOffset &&
-            outputPixels <= MaximumBmpBytes / sizeof(std::uint16_t);
+            outputPixels <= MaximumBmpBytes / sizeof(std::uint32_t);
         if (!valid)
         {
             HeapFree(GetProcessHeap(), 0, file);
             return false;
         }
 
-        auto* pixels = static_cast<std::uint16_t*>(HeapAlloc(
+        auto* pixels = static_cast<std::uint32_t*>(HeapAlloc(
             GetProcessHeap(),
             HEAP_ZERO_MEMORY,
-            static_cast<SIZE_T>(outputPixels * sizeof(std::uint16_t))));
+            static_cast<SIZE_T>(outputPixels * sizeof(std::uint32_t))));
         if (!pixels)
         {
             HeapFree(GetProcessHeap(), 0, file);
@@ -558,8 +571,8 @@ namespace
                 const auto* source = row + x * bytesPerPixel;
                 const std::uint8_t alpha =
                     bitsPerPixel == 32 && alphaIsUsed ? source[3] : 255;
-                output[x] = ConvertPixel(
-                    source[2], source[1], source[0], alpha, pixelFormat);
+                output[x] = PackArgb8888(
+                    source[2], source[1], source[0], alpha);
             }
         }
 
@@ -714,6 +727,14 @@ extern "C" __declspec(dllexport) int __cdecl CreateTextureWithOverride(
         return original(id, width, height, type, originalData, flags, name, checksum);
     }
 
+    const auto formatFlags = *reinterpret_cast<const volatile LONG*>(
+        Argb8888FormatFlagsAddress);
+    if ((formatFlags & 1) == 0)
+    {
+        LogError(path, "the active renderer does not support 32-bit ARGB textures");
+        return original(id, width, height, type, originalData, flags, name, checksum);
+    }
+
     DecodedBmp decoded = {};
     if (!DecodeBmp(
             path,
@@ -721,19 +742,18 @@ extern "C" __declspec(dllexport) int __cdecl CreateTextureWithOverride(
             height,
             expectedWidth,
             expectedHeight,
-            type & 0xFF,
             decoded))
     {
         LogError(path, "expected an uncompressed 24/32-bit BMP no larger than the original texture");
         return original(id, width, height, type, originalData, flags, name, checksum);
     }
 
-    const unsigned linearType = 0x0900 | (type & 0xFF);
+    const ScopedPreferredTextureFormat preferredFormat(Argb8888FormatIndex);
     const int result = original(
         id,
         width,
         height,
-        linearType,
+        LinearArgb8888Type,
         decoded.pixels,
         flags,
         name,

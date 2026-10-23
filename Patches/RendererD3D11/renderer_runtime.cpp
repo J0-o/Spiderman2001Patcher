@@ -31,6 +31,7 @@ extern "C"
     __declspec(dllexport) volatile LONG SpideyAnisotropicFiltering = 0;
     __declspec(dllexport) volatile LONG SpideyVSync = 1;
     __declspec(dllexport) volatile LONG SpideyFpsLimit = 0;
+    __declspec(dllexport) volatile LONG SpideyLastTextureFormat = DXGI_FORMAT_UNKNOWN;
 }
 
 namespace

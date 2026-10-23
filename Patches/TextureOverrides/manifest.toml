@@ -1,9 +1,9 @@
 [patch]
 id = "texture-overrides"
 name = "Per-Texture Overrides"
-version = "1.0.1"
+version = "1.1.0"
 author = "Spider-Man Patch Project"
-description = "Loads per-texture BMP replacements from TextureOverrides while preserving the original archive and texture metadata."
+description = "Loads per-texture 32-bit BMP replacements from TextureOverrides while preserving the original archive and texture metadata."
 
 requires = []
 conflicts = []
