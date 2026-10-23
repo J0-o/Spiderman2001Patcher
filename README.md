@@ -6,7 +6,7 @@ When asked about the possibilities of a remake:
 ## Goals
 The Neversoft 2000/2001 Spider-man game seems to have become abandonware. The goal of this repository is to provide tools and fixes that resolve bugs in the PC version and improve its compatibility with modern hardware and operating systems.
 
-This is a port of KotOR Patch Manager's runtime patch framework.
+This is a port of [KotOR Patch Manager](https://github.com/LaneDibello/Kotor-Patch-Manager)'s runtime patch framework.
 Every launch discovers and applies every top-level `.kpatch` file in the patch
 directory, then starts Spider-Man with the 32-bit runtime DLL injected.
 
@@ -28,13 +28,13 @@ Requirements:
 Run:
 
 ```powershell
-.\build.ps1
+.\build.bat
 ```
 ## Source layout
 
 Every patch is self-contained in one directory under `Patches`. A patch
 directory contains its `manifest.toml`, hook TOML files, and—when native code
-is required—its Visual C++ project and `src`/`include` directories. Build
+is required—its Visual C++ project. Build
 outputs remain inside that patch directory and are ignored by Git.
 
 The remaining top-level source is shared infrastructure:
